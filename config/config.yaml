@@ -1,0 +1,31 @@
+# Expects {sm}.fa
+input_dir_asm: "test/assembly"
+# Expects {sm}.bam
+input_dir_bam: "test/bam"
+
+output_dir: "results"
+
+samples:
+  - "HG00171"
+
+secphase:
+  threads: 12
+  mem: 4
+
+calculate_cov:
+  threads: 8
+  mem: 4
+
+cov_dist_fit:
+  mem: 4
+
+extract_blocks:
+  mem: 4
+
+corrections:
+  incorporate_hsat_cov_bias:
+    ""
+  window_spec_models:
+    ""
+  bedfiles_point_to_false_dupe:
+    ""
