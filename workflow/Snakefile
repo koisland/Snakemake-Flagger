@@ -1,12 +1,9 @@
 
-include: "rules/1_secphase.smk"
-include: "rules/2_calculate_cov.smk"
-include: "rules/3_cov_dist_fit.smk"
-include: "rules/4_extract_blocks.smk"
+include: "rules/calculate_cov.smk"
+include: "rules/flagger.smk"
 
 
 rule all:
     input:
-        rules.secphase_all.input,
         rules.calculate_cov_all.input,
-        rules.cov_dist_fit_all.input,
+        rules.flagger_all.input,
