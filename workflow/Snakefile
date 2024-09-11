@@ -3,6 +3,7 @@ include: "rules/calculate_cov.smk"
 include: "rules/flagger.smk"
 
 
+# See https://github.com/mobinasri/flagger/blob/main/wdls/workflows/hmm_flagger_end_to_end.wdl
 rule all:
     input:
         rules.calculate_cov_all.input,
