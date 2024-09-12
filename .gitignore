@@ -2,3 +2,6 @@
 results
 logs
 benchmarks
+data
+test/bam_files
+test/fasta_files

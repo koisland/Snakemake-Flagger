@@ -1,7 +1,7 @@
 # Expects {sm}.fa
-input_dir_asm: "data/asm"
+input_dir_asm: "test/fasta_files"
 # Expects {sm}.bam
-input_dir_bam: "data/bam"
+input_dir_bam: "test/bam_files"
 
 output_dir: "results"
 

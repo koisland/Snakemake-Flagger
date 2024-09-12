@@ -6,9 +6,9 @@ include: "constants.smk"
 
 rule index_asm:
     input:
-        fa_asm=os.path.join(INPUT_DIR_ASM, "{sm}.fa.gz"),
+        fa_asm=os.path.join(INPUT_DIR_ASM, "{sm}.fa"),
     output:
-        fai=os.path.join(INPUT_DIR_ASM, "{sm}.fa.gz.fai"),
+        fai=os.path.join(INPUT_DIR_ASM, "{sm}.fa.fai"),
     singularity:
         "docker://mobinasri/flagger:v1.0.0"
     resources:
@@ -22,33 +22,11 @@ rule index_asm:
         """
 
 
-# Remove N's
-rule create_wg_bedfile:
-    input:
-        fa_asm=os.path.join(INPUT_DIR_ASM, "{sm}.fa.gz"),
-        fai=rules.index_asm.output,
-    output:
-        fa_asm=temp(os.path.join(INPUT_DIR_ASM, "{sm}.fa")),
-        wg_bed=os.path.join(OUTPUT_DIR, "calculate_cov", "asm_{sm}_wg.bed"),
-    singularity:
-        "docker://mobinasri/flagger:v1.0.0"
-    resources:
-        mem=4,
-    log:
-        os.path.join(LOGS_DIR, "calculate_cov", "create_wg_bedfile_{sm}.log"),
-    shell:
-        """
-        zcat {input.fa_asm} > {output.fa_asm}
-        {{ awk -v OFS="\\t" '{{ print $1, 0, $2}}' {input.fai} | \
-            bedtools sort -i - | \
-            bedtools subtract -a - -b <(python3 /home/scripts/get_N_coords.py --inputFasta {output.fa_asm});}} > {output.wg_bed} 2> {log}
-        """
-
-
 rule create_wg_json:
     input:
-        rules.create_wg_bedfile.output.wg_bed,
+        rules.index_asm.output.fai,
     output:
+        bed=os.path.join(OUTPUT_DIR, "calculate_cov", "asm_{sm}_wg.bed"),
         json=os.path.join(OUTPUT_DIR, "calculate_cov", "asm_{sm}_wg.json"),
     singularity:
         "docker://mobinasri/flagger:v1.0.0"
@@ -58,9 +36,11 @@ rule create_wg_json:
         os.path.join(LOGS_DIR, "calculate_cov", "create_bedfile_{sm}.log"),
     shell:
         """
+        cat {input} | awk '{{print $1"\t0\t"$2}}' > {output.bed}
+
         # make a json file pointing to the asm_wg.bed
         echo "{{" > {output.json}
-        echo \\"asm_wg\\": \\"{input}\\" >> {output.json}
+        echo \\"whole_genome\\" : \\"{output.bed}\\" >> {output.json}
         echo "}}" >> {output.json}
         """
 
@@ -75,7 +55,7 @@ rule bam2cov:
             else []
         ),
     output:
-        os.path.join(OUTPUT_DIR, "calculate_cov", "read_alignment_{sm}.cov"),
+        os.path.join(OUTPUT_DIR, "calculate_cov", "coverage_file_{sm}.cov.gz"),
     params:
         baseline_annotation="whole_genome",
         mapq_threshold=20,

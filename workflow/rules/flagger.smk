@@ -6,7 +6,7 @@ include: "constants.smk"
 
 rule flagger:
     input:
-        cov=os.path.join(OUTPUT_DIR, "calculate_cov", "read_alignment_{sm}.cov"),
+        cov=os.path.join(OUTPUT_DIR, "calculate_cov", "coverage_file_{sm}.cov.gz"),
         alpha=config["flagger"]["alpha"],
     output:
         directory(os.path.join(OUTPUT_DIR, "flagger", "{sm}")),

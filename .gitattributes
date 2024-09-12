@@ -1,5 +1,0 @@
-test/assembly/HG00171.fa.gz filter=lfs diff=lfs merge=lfs -text
-test/assembly/HG00171.fa.gz.fai filter=lfs diff=lfs merge=lfs -text
-test/assembly/HG00171.fa.gz.gzi filter=lfs diff=lfs merge=lfs -text
-test/bam/HG00171.bam filter=lfs diff=lfs merge=lfs -text
-test/bam/HG00171.bam.bai filter=lfs diff=lfs merge=lfs -text
